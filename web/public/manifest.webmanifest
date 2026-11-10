@@ -1,0 +1,25 @@
+{
+  "name": "CyberGigiyena — xavfsiz raqamli odatlar",
+  "short_name": "CyberGigiyena",
+  "description": "Har kuni bir necha daqiqada raqamli xavflarni tanish va xavfsiz qaror qilishni o‘rganing.",
+  "start_url": "/home",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F7FB",
+  "theme_color": "#1677F2",
+  "lang": "uz",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
