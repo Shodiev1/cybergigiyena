@@ -27,7 +27,7 @@ class WebShell extends StatefulWidget {
   State<WebShell> createState() => _WebShellState();
 }
 class _WebShellState extends State<WebShell> {
-  static const configuredUrl = String.fromEnvironment('APP_URL');
+  static const configuredUrl = String.fromEnvironment('APP_URL', defaultValue: 'https://cybergigiyena.onrender.com');
   WebViewController? _controller;
   late final UrlPolicy _policy;
   Timer? _timeout;
