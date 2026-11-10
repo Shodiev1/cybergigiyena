@@ -39,7 +39,7 @@ export DB_USER='cg_app'
 export DB_PASSWORD='cg_docker_pass'
 
 echo "==> Running backend migrations..."
-php backend/bin/setup.php || true
+php backend/bin/setup.php
 
 echo "==> Starting PHP API server..."
 php -S 127.0.0.1:8000 -t backend/public backend/public/index.php &

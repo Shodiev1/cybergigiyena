@@ -2,14 +2,16 @@
 declare(strict_types=1);
 require __DIR__.'/../src/bootstrap.php';
 if(PHP_SAPI!=='cli')exit(1);
-if(!is_file(ROOT.'/../.runtime/config.json')){
- $root=new PDO('mysql:host=127.0.0.1;port=3308;charset=utf8mb4','root','',[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+if(!getenv('DB_DSN') && !is_file(ROOT.'/../.runtime/config.json')){
+ $port = getenv('DB_PORT') ?: '3308';
+ $root=new PDO("mysql:host=127.0.0.1;port=$port;charset=utf8mb4",'root','',[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
  $pass=bin2hex(random_bytes(24));$rootPass=bin2hex(random_bytes(24));
  $root->exec('CREATE DATABASE IF NOT EXISTS cybergigiyena CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
  $root->exec("CREATE USER IF NOT EXISTS 'cg_app'@'127.0.0.1' IDENTIFIED BY '$pass'");
  $root->exec("GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, REFERENCES ON cybergigiyena.* TO 'cg_app'@'127.0.0.1'");
  $root->exec("ALTER USER 'root'@'localhost' IDENTIFIED BY '$rootPass'");
- file_put_contents(ROOT.'/../.runtime/config.json',json(['dsn'=>'mysql:host=127.0.0.1;port=3308;dbname=cybergigiyena;charset=utf8mb4','user'=>'cg_app','password'=>$pass]));
+ @mkdir(ROOT.'/../.runtime', 0777, true);
+ file_put_contents(ROOT.'/../.runtime/config.json',json(['dsn'=>"mysql:host=127.0.0.1;port=$port;dbname=cybergigiyena;charset=utf8mb4",'user'=>'cg_app','password'=>$pass]));
  file_put_contents(ROOT.'/../.runtime/mysql-admin.json',json(['password'=>$rootPass]));
 }
 $sql=file_get_contents(ROOT.'/migrations/001_schema.sql');foreach(explode(';',$sql) as $stmt)if(trim($stmt)!=='')db()->exec($stmt);
