@@ -1,0 +1,20 @@
+{
+  "slug": "alert-uzcert-telegram-code-20260707",
+  "title": "Telegramda davlat idorasi nomidan kod so‘rash",
+  "summary": "Gurlan tumani hokimligi 2026-yil 7-iyulda UZCERT ogohlantirishini e’lon qilgan: firibgarlar Telegramda o‘zini davlat idorasi xodimi deb tanishtirib, tasdiqlash kodini so‘rashi mumkin. Bu o‘sha sanada e’lon qilingan usul haqidagi xabar; hodisa hozir davom etayotgani tasdiqlanmagan.",
+  "topic": "phishing",
+  "severity": "medium",
+  "regionScope": "UZ",
+  "sourceName": "Gurlan tumani hokimligi / UZCERT",
+  "sourceUrl": "https://gov.uz/oz/gurlan/news/view/189014",
+  "publishedAt": "2026-07-07",
+  "verifiedAt": "2026-11-05",
+  "activeFrom": "2026-11-05",
+  "activeUntil": "2026-11-19",
+  "relatedScenario": "bank-sms",
+  "steps": [
+    "Telefon yoki Telegram orqali kelgan tasdiqlash kodini, parolni va karta ma’lumotlarini bermang.",
+    "Suhbatni tugating va qo‘ng‘iroq qilgan akkauntni bloklang.",
+    "Tashkilot bilan uning rasmiy aloqa kanalini o‘zingiz topib, xabarni tekshiring."
+  ]
+}

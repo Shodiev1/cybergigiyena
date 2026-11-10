@@ -1,0 +1,15 @@
+export type Topic = { slug: string; title: string; summary: string; icon: string; color: string };
+export type Lesson = { slug: string; topic: string; title: string; summary: string; story: string; rules: { title: string; body: string }[]; action: string; minutes: number; version: number; questionId: string };
+export type Question = { id: string; title: string; topic: string; options: { id: string; label: string }[]; lesson: string };
+export type Answer = { id: string; correct: boolean; explanation: string; lesson: string; answer: string };
+export type Scenario = { slug: string; title: string; summary: string; topic: string; icon: string; color: string; minutes: number; version: number; lesson: string };
+export type Decision = { scene: string; choice: string; label: string; safe: boolean; why: string };
+export type Attempt = { id: string; scenario: Scenario; step: number; finished: boolean; ready: boolean; scene: { id: string; kind: string; sender: string; body: string; prompt: string; choices: { id: string; label: string }[] } | null; feedback: Decision[]; lesson: string; createdAt?: string };
+export type PromiseRecord = { id: string; day: string; lesson: string; title: string; state: 'selected' | 'done' | 'later' };
+export type Skill = { topic: string; title: string; evidence: number; enough: boolean; percent: number | null; needsPractice: boolean };
+export type Progress = { lessons: { slug: string; step: number; completed: number; updated_at?: string }[]; attempts: Attempt[]; questions: { question_id: string; correct: number; explanation: string; id: string; answer: string }[]; promises: PromiseRecord[]; skills: Skill[] };
+export type Catalog = { topics: Topic[]; lessons: Lesson[]; scenarios: Scenario[]; glossary: { term: string; body: string; lesson: string }[]; version: number };
+export type Daily = { date: string; timezone: string; bundle_id: string; fallback: boolean; theme: string; mission: Scenario; lesson: Lesson; question: Question; tip: string; promise: string; alert?: AlertItem | null };
+export type User = { id: string; name: string; email: string; role: string };
+export type Preferences = { theme: 'system' | 'light' | 'dark'; fontScale: number; reducedMotion: boolean; checklist: string[] };
+export type AlertItem = { slug: string; title: string; summary: string; sourceName: string; sourceUrl: string; publishedAt: string; verifiedAt: string; activeFrom: string; activeUntil: string; steps: string[] };

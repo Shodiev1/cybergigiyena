@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--no-proxy-server'] });
+const page = await browser.newPage();
+page.on('console', message => { if (message.type() === 'error') console.log('CONSOLE', message.text()); });
+page.on('pageerror', error => console.log('JS ERROR', error.message));
+page.on('requestfailed', request => console.log('REQUEST FAILED', new URL(request.url()).pathname, request.failure()));
+page.on('response', response => { if (response.status() >= 400 || response.url().includes('/api/v1/')) console.log('HTTP', response.status(), new URL(response.url()).pathname); });
+await page.goto('http://127.0.0.1:3000/home');
+await page.waitForTimeout(18000);
+console.log('PAGE', await page.locator('main').innerText());
+await browser.close();

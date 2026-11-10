@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env
+.env.local
+.runtime/
+backend/var/*
+!backend/var/.gitkeep
+flutter/.dart_tool/
+flutter/build/
+flutter/.flutter-plugins-dependencies
+test-results/
+*.log

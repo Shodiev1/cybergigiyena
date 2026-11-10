@@ -1,0 +1,22 @@
+'use client';
+import { useEffect, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { api, errorText } from '@/lib/api';
+import { Notice } from './ui';
+import type { Payload, RecordRow } from './admin';
+
+type Revision = {id:number;version:number;payload:Payload;created_at:string};
+export function ContentPreview({kind,payload:p}:{kind:string;payload:Payload}) {
+ const [width,setWidth]=useState('393'),[dark,setDark]=useState(false);
+ const [scene,setScene]=useState(p.start),[feedback,setFeedback]=useState('');
+ useEffect(()=>{setScene(p.start);setFeedback('');},[p]);
+ const current=p.scenes?.[scene];
+ const style={width:Number(width),maxWidth:'100%',padding:20,margin:'20px auto',overflowWrap:'anywhere',background:'var(--bg)',color:'var(--text)',border:'1px solid var(--line)',borderRadius:16,...(dark?{'--bg':'#0d1422','--surface':'#152032','--text':'#eef4fc','--muted':'#a3b1c5','--line':'#2b394e','--primary':'#79b4ff'}:{'--bg':'#f6f8fb','--surface':'#fff','--text':'#172435','--muted':'#718093','--line':'#e8edf3','--primary':'#1677ed'})} as CSSProperties;
+ return <section aria-label="Kontent ko‘rinishi"><div className="admin-actions"><label className="field">Ko‘rinish kengligi<select value={width} onChange={e=>setWidth(e.target.value)}>{['320','393','768'].map(w=><option key={w} value={w}>{w} px</option>)}</select></label><label className="check-row"><input type="checkbox" checked={dark} onChange={e=>setDark(e.target.checked)}/>Tun rejimi</label></div><p className="description">Kontent namoyishi. Kenglik mavjud joyga moslashadi; mashq natijalari saqlanmaydi.</p><article style={style} className="stack"><h2>{p.title}</h2><p>{p.summary}</p>{kind==='lesson'&&<><p>{p.story}</p>{p.rules.map((r,i)=><section key={i}><h3>{r.title}</h3><p>{r.body}</p></section>)}<Notice>{p.action}</Notice></>}{kind==='alert'&&<><p>Manba: {p.sourceName}</p><p>{p.sourceUrl}</p><p>E’lon: {p.publishedAt} · Tekshiruv: {p.verifiedAt}</p><p>Amal qiladi: {p.activeFrom} — {p.activeUntil}</p><ol>{p.steps.map((s,i)=><li key={i}>{s}</li>)}</ol></>}{kind==='scenario'&&<>{feedback&&<Notice>{feedback}</Notice>}{scene==='end'?<p>Mashq yakunlandi.</p>:current?<><p className="meta">{current.sender}</p><p>{current.body}</p><h3>{current.prompt}</h3>{current.choices.map(c=><button key={c.id} className="button secondary" onClick={()=>{setFeedback((c.safe?'Xavfsiz qaror. ':'Xavfli qaror. ')+c.why);setScene(c.next);}}>{c.label}</button>)}</>:<Notice error>Sahna topilmadi. Tarmoqlanishni tekshiring.</Notice>}<button className="button secondary" onClick={()=>{setScene(p.start);setFeedback('');}}>Mashqni qayta boshlash</button></>}</article></section>;
+}
+export function RevisionHistory({row,canRestore,onRestored}:{row:RecordRow;canRestore:boolean;onRestored:()=>Promise<void>}) {
+ const [open,setOpen]=useState(false),[rows,setRows]=useState<Revision[]>([]),[selected,setSelected]=useState<Revision|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ async function load(){setOpen(true);setBusy(true);setError('');try{setRows(await api<Revision[]>('/admin/content/'+row.id+'/revisions'));}catch(e){setError(errorText(e));}finally{setBusy(false);}}
+ async function restore(){if(!selected)return;setBusy(true);setError('');try{await api('/admin/content/'+row.id+'/restore','POST',{revisionId:Number(selected.id),version:Number(row.version)});await onRestored();}catch(e){setError(errorText(e));}finally{setBusy(false);}}
+ return <section style={{marginTop:24}} aria-label="Tahrir tarixi"><button className="button secondary" disabled={busy} aria-expanded={open} onClick={()=>open?setOpen(false):void load()}>Tahrir tarixi</button>{open&&<div className="stack">{error&&<Notice error>{error}</Notice>}{busy&&<p role="status">Yuklanmoqda…</p>}{!busy&&!error&&!rows.length&&<Notice>Avvalgi tahrirlar mavjud emas.</Notice>}{rows.map(r=><button className="button secondary" key={r.id} disabled={busy} aria-pressed={selected?.id===r.id} onClick={()=>setSelected(r)}>Versiya {r.version} · {r.created_at} UTC</button>)}{selected&&<><ContentPreview key={selected.id} kind={row.kind} payload={selected.payload}/><Notice>Tanlangan nusxa yangi qoralama bo‘ladi. Saqlanmagan tahrirlaringiz almashtiriladi. Nashr uchun qayta mustaqil tekshiruv kerak.</Notice>{canRestore&&<button className="button primary" disabled={busy} onClick={restore}>Versiya {selected.version} ni qoralamaga tiklash</button>}</>}</div>}</section>;
+}

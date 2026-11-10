@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cybergigiyena
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PORT
+        value: "3000"
+      - key: NODE_ENV
+        value: production
